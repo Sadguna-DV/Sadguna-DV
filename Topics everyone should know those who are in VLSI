@@ -1,0 +1,132 @@
+1. What is VLSI?
+VLSI, which stands for Very Large Scale Integration, is a process used in the design and fabrication of integrated circuits (ICs), which are electronic circuits that are made up of a large number of transistors and other components that are integrated into a single chip. the technology allows for the creation of highly complex and compact ICs that can be used in a wide range of applications, from consumer electronics and computers to communication systems and medical devices.
+-One of the key advantages of this technology is its ability to pack a large number of transistors and other components onto a single chip, which allows for the creation of highly complex and powerful ICs.
+-Another advantage of VLSI technology is its cost-effectiveness. Because it allows for the integration of a large number of components onto a single chip, it can reduce the number of discrete components that are needed in a circuit, which can help to reduce the overall cost of the circuit.
+
+2. What are the steps for VLSI design process?
+The VLSI Design process involves a number of steps, including the following:
+Defining the requirements for the IC: This includes determining the functions that the IC will need to perform, the size and power constraints, and other requirements.
+Developing a high-level design: This involves creating a high-level architectural design of the IC, including the overall structure and how the different components will fit together.
+Detailing the design: This involves creating a detailed design of the IC, including the layout of the transistors and other components.
+Verifying the design: This involves ensuring that the design meets all of the requirements and that it will function correctly.
+Fabricating the IC: This involves creating the physical IC using specialized manufacturing processes.
+
+3. What are the types of VLSI Design?
+VLSI design is a complex and challenging field, involving the creation of integrated circuits that contain millions or billions of transistors. There are several different types of VLSI design, each of which offers its own set of advantages and disadvantages.
+
+We will take a closer look at two of the most common types of VLSI design which are:
+
+Programmable VLSI Design
+Non-programmable VLSI Design
+i. Programmable VLSI Design
+Programmable VLSI design involves creating a circuit that can be easily reconfigured to perform different tasks. This is accomplished through the use of programmable logic elements, such as FPGAs or CPLDs. These elements contain a set of configurable digital logic gates that can be programmed to perform a wide range of functions. Programmable VLSI designs are typically created using a combination of custom digital logic circuits and programmable logic elements, allowing for a high degree of flexibility and adaptability.
+
+ii. Non-programmable VLSI Design
+Non-programmable VLSI design, on the other hand, involves creating a fixed circuit that cannot be easily modified once it has been fabricated. This type of design is often used for high-performance systems that require a great deal of control over the circuit’s operation. Non-programmable VLSI designs are typically created using custom-designed digital logic circuits, such as standard-cell or full-custom designs. These circuits are designed and tested to meet the specific requirements of the system, and cannot be easily changed once they have been fabricated.
+
+
+4. What is the differenced between ASIC and FPGA?
+In the field of VLSI, two prominent technologies stand out: Application-Specific Integrated Circuits (ASICs) and Field-Programmable Gate Arrays (FPGAs). These technologies serve as the building blocks for modern electronic devices, but they possess distinct characteristics and applications.
+ASIC (Application-Specific Integrated Circuit):
+ASICs are custom-designed integrated circuits created for a specific application or task. They are tailored to perform a specific function, resulting in high efficiency and optimal performance for that particular task. ASICs are manufactured through a complex process that involves designing a layout at the transistor level.
+
+FPGA (Field-Programmable Gate Array):
+FPGAs, on the other hand, are semiconductor devices that can be configured by a user or designer after manufacturing. They consist of a matrix of programmable logic blocks and programmable interconnects. This flexibility allows FPGAs to be reprogrammed for various tasks, making them versatile but potentially less optimized for specific functions compared to ASICs.
+
+5. What are the different coding styles of Verilog?
+Verilog language has the capability of designing a module in several coding styles. Depending on the needs of a design, internals of each module can be defined at four level of abstractions. Irrespective of the internal abstraction level, the module would behave exactly in the similar way to the external environment.
+Behavioral or Algorithmic level
+Dataflow level
+Gate level or Structural level
+Switch level
+
+Behavioral or Algorithmic level:
+
+This is the highest level of abstraction provided by Verilog HDL.
+A module can be implemented in terms of the desired design algorithm without concern for the hardware implementation details.
+It specifies the circuit in terms of its expected behavior.
+It is the closest to a natural language description of the circuit functionality, but also the most difficult to synthesize.
+
+module Mux_4to1(
+   input [3:0] i,
+   input [1:0] s,
+   output reg o
+);
+ 
+always @(s or i)
+begin
+   case (s)
+      2'b00 : o = i[0];
+      2'b01 : o = i[1];
+      2'b10 : o = i[2];
+      2'b11 : o = i[3];
+      default : o = 1'bx;
+   endcase
+end
+endmodule
+
+The output port is declared as data type “reg”. Combination of “always” block and “case” procedural statement is used to implement the multiplexer. All inputs are added as part of the sensitivity list. Select signal “s” is used as condition here. Based on value of select signal “s”, any one of the input signal will be selected. Here we are implementing the functionality of multiplexer at higher-level of abstraction without looking into internal details of the design as in “Structural Modeling”
+
+Dataflow level:
+
+At this level, the module is designed by specifying the data flow.
+Looking towards this design, one can realize how data flows between hardware registers and how the data is processed in the design.
+This style is similar to logical equations. The specification is comprised of expressions made up of input signals and assigned to outputs.
+In most cases, such an approach can be quite easily translated into a structure and then implemented.
+
+module Mux_4to1_df(
+input [3:0] i,
+input [1:0] s,
+output o
+);
+ 
+assign o = (~s[1] & ~s[0] & i[0]) | (~s[1] & s[0] & i[1]) | (s[1] & ~s[0] & i[2]) | (s[1] & s[0] & i[3]);
+endmodule
+
+In this approach “assign” statement is used. Assign statement is a continuous statement where in any changes in signals on right hand side will update the output signal. Any changes in the input signals will execute the assign statement and the updated value will be reflected on the output “o”. Changes in the inputs are continuously monitored.
+
+Gate level or Structural level:
+
+The module is implemented in terms of logic gates and interconnections between these gates.
+It resembles a schematic drawing with components connected with signals.
+A change in the value of any input signal of a component activates the component. If two or more components are activated concurrently, they will perform their actions concurrently as well.
+A structural system representation is closer to the physical implementation than behavioral one but it is more involved because of large number of details. Since logic gate is most popular component, Verilog has a predefined set of logic gates known as primitives. Any digital circuit can be built from these primitives.
+
+module Mux_4to1_gate(
+input [3:0] i,
+input [1:0] s,
+output o
+);
+ 
+wire NS0, NS1;
+wire Y0, Y1, Y2, Y3;
+not N1(NS0, s[0]);
+not N2(NS1, s[1]);
+and A1(Y0, i[0], NS1, NS0);
+and A2(Y1, i[1], NS1, s[0]);
+and A3(Y2, i[2], s[1], NS0);
+and A4(Y3, i[3], s[1], s[0]);
+or O1(o, Y0, Y1, Y2, Y3);
+endmodule
+
+In this approach, the multiplexer is represented in gate-level representation. It consists of ‘4’ AND gates, ‘2’ NOT gates and ‘1’ OR gate. Intermediate signals “NS1”, “NS0”, “Y3”, “Y2”, “Y1”, and “Y0” are declared as wires. In this AND, OR and NOT gates are basic Verilog inbuilt primitives. These primitives are instantiated and connected in such a way, to get the functionality of multiplexer. This type of modeling of multiplexer is known as “Structural Modeling”. In this internal details of the circuit are known to model it.
+
+Switch level:
+
+This is the lowest level of abstraction provided by Verilog.
+A module can be implemented in terms of transistors, switches, storage nodes, and the interconnections between them.
+In Verilog HDL transistors are known as Switches that can either conduct or open.
+Design at this level requires knowledge of switch-level implementation details.
+Verilog supports design that can be represented in different modeling levels. Describing the design at different levels is known as Mixed-level Modeling. Simulating the design consisting of different modeling levels is known as Mixed-level Simulation.
+
+6. What are CLB, IOB and DCM in FPGA. Difference between Block Ram and Distributed RAM. Importance of LUT, Wide Mux.
+CLB stands for Configurable Logic Block. It is a fundamental building block of an FPGA that contains a flexible lookup table structure that can implement logic plus storage elements such as flip-flops and latches, perform various logic functions, and store data 12345.
+IOB stands for Input/Output Block. It controls the data flow between I/O pins and internal logic devices 25.
+DCM stands for Digital Clock Manager. It is a circuit that provides clock management functions such as frequency synthesis, phase shifting, and delay adjustment.
+
+Block RAM and Distributed RAM are two types of RAM used in FPGAs. The difference between them is that Block RAM uses the entire dual-port RAM resource in the FPGA, while Distributed RAM is formed by piecing together the look-up table in the FPGA.  In some cases, the memory output is driven directly, which forces the tools to go distributed regardless of the size because block RAM can't do that.
+
+
+
+
+
